@@ -13,8 +13,8 @@ Shader "DayNightSystem/TransitionSkybox"
         _StarMinTransition ("Star Min Transition", Range(0,1)) = 0.9
         _StarMaxTransition ("Star Max Transition", Range(0,1)) = 1.0
         _StarColor ("Star Color", Color) = (1, 1, 1, 1)
-        _StarScale ("Star Scale", Range(0.1, 3)) = 1
-        _StarSize ("Star Size", Range(0.1, 2)) = 1
+        _StarVisibility ("Star Visibility", Range(0.005, 0.1)) = 0.1
+        [Space]
         _TwinkleSpeed ("Twinkle Speed", Range(0, 5)) = 1
         _TwinkleIntensity ("Twinkle Intensity", Range(0, 5)) = 1
         [Space]
@@ -57,8 +57,7 @@ Shader "DayNightSystem/TransitionSkybox"
             float _StarMinTransition;
             float _StarMaxTransition;
             fixed4 _StarColor;
-            float _StarScale;
-            float _StarSize;
+            float _StarVisibility;
             float _TwinkleSpeed;
             float _TwinkleIntensity;
 
@@ -90,7 +89,7 @@ Shader "DayNightSystem/TransitionSkybox"
                 // Transforms vertices and calculates skybox coordinates
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.skyboxCoord = v.vertex * _StarScale;
+                o.skyboxCoord = v.vertex * _StarVisibility;
                 UNITY_TRANSFER_FOG(o, o.vertex);
                 return o;
             }
@@ -100,13 +99,10 @@ Shader "DayNightSystem/TransitionSkybox"
                 // Normalize the skybox coordinates
                 float3 worldPos = normalize(i.skyboxCoord.xyz);
 
-                // Adjust star coordinates based on size
-                float3 starCoord = worldPos * _StarSize;
-
                 // Sample day, night, and star textures
                 float3 dayColor = texCUBE(_DayTexture, worldPos);
                 float3 nightColor = texCUBE(_NightTexture, worldPos);
-                float3 starColor = texCUBE(_StarTexture, starCoord) * _StarColor.rgb;
+                float3 starColor = texCUBE(_StarTexture, worldPos) * _StarColor.rgb;
 
                 // Calculate twinkling effect for stars
                 float noise = rand(worldPos);

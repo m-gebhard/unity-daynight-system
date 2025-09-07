@@ -1,6 +1,6 @@
 {
   "name": "com.mgelabs.daynightsystem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "DayNight System",
   "description": "A Day/Night cycle system for Unity.",
   "unity": "2022.1",
