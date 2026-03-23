@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     /// <summary>
     /// Configuration for visual aspects of the day-night cycle, including skybox, fog, and lighting settings.
     /// </summary>
-    [CreateAssetMenu(fileName = "DayNightVisualConfig", menuName = "DayNightSystem/Visual Config")]
+    [CreateAssetMenu(fileName = "DayNightVisualConfig", menuName = "MGe Labs/DayNightSystem/Visual Config")]
     public class DayNightVisualConfig : ScriptableObject
     {
         [Header("Skybox")]

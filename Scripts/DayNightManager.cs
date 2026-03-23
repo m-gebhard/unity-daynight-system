@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     /// <summary>
     /// Manages the day-night cycle in the game, including time progression, visual updates, and events.
@@ -14,23 +15,32 @@ namespace DayNightSystem
         [Header("Time & Day")]
         [SerializeField] [Range(0, 1440f)] protected float currentTime;
         [SerializeField] protected int currentDay;
+
         [Header("Visuals")]
         [Tooltip("Configuration for visual aspects of the day-night cycle (leave empty for none).")]
         [SerializeField] protected DayNightVisualConfig visualConfig;
         [Tooltip("The directional light representing the sun in the scene.")]
         [SerializeField] protected Light directionalLight;
+        [Tooltip("Additional visual modules to update with the day-night cycle.")]
+        [SerializeField] protected List<DayNightVisualModule> visualModules;
+
         [Header("Configuration")]
         [Tooltip("Multiplier for the time progression speed.")]
         [SerializeField] protected float timeScale = 1;
         [Tooltip("Format for time formatting.")]
         [SerializeField] protected string displayTimeFormat = "{0:00}:{1:00}";
+
         [Header("Limit")]
         [Tooltip(
             "A limit to the time. Once reached, the time won't progress further until manually reset. Keep at -1 for no limit.")]
         [SerializeField] [Range(-1, 1440f)] protected float currentTimeLimit = -1;
+
         [Header("Events")]
+        [Tooltip("Invoked when the hour changes, passing the new hour as an integer (0-23).")]
         public UnityEvent<int> OnHourChanged;
+        [Tooltip("Invoked when the time limit is reached, passing the reached time.")]
         public UnityEvent<float> OnTimeLimitReached;
+        [Tooltip("Invoked when the day changes, passing the new day count as an integer.")]
         public UnityEvent<int> OnDayChanged;
         public event Action<int> OnHourChangedAction;
         public event Action<float> OnTimeLimitReachedAction;
@@ -70,7 +80,7 @@ namespace DayNightSystem
 
             if (visualConfig)
             {
-                visualizer = new DayNightVisualizer(visualConfig, directionalLight);
+                visualizer = new DayNightVisualizer(visualConfig, directionalLight, visualModules);
                 visualizer.Init();
             }
         }
@@ -138,7 +148,7 @@ namespace DayNightSystem
             {
                 visualizer?.Cleanup();
 
-                visualizer = new DayNightVisualizer(visualConfig, directionalLight);
+                visualizer = new DayNightVisualizer(visualConfig, directionalLight, visualModules);
                 visualizer.Init();
                 visualizer.Update(NormalizedTime);
             }

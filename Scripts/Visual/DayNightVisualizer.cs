@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     /// <summary>
     /// Handles the visualization of the day-night cycle, including updating lighting, fog, and skybox settings
@@ -17,6 +17,7 @@ namespace DayNightSystem
 
         protected readonly DayNightVisualConfig config;
         protected readonly Light directionalLight;
+        protected readonly List<DayNightVisualModule> visualModules;
 
         protected Material skyMaterial;
 
@@ -26,12 +27,18 @@ namespace DayNightSystem
         /// </summary>
         /// <param name="config">The configuration for the day-night cycle visuals.</param>
         /// <param name="directionalLight">The directional light representing the sun.</param>
-        public DayNightVisualizer(DayNightVisualConfig config, Light directionalLight)
+        /// <param name="visualModules">A list of visual modules that can be used to extend the visualizer's functionality.</param>
+        public DayNightVisualizer(
+            DayNightVisualConfig config,
+            Light directionalLight,
+            List<DayNightVisualModule> visualModules
+        )
         {
             skyMaterial = new Material(config.skyMaterial);
 
             this.config = config;
             this.directionalLight = directionalLight;
+            this.visualModules = visualModules;
         }
 
         /// <summary>
@@ -64,6 +71,7 @@ namespace DayNightSystem
             ApplyFog(timePercentage);
             ApplySkyFog(timePercentage);
             ApplySkyAndSunTransition(timePercentage);
+            ApplyUpdatesToModules(timePercentage);
         }
 
         /// <summary>
@@ -130,6 +138,24 @@ namespace DayNightSystem
             float sunRotationX = timePercentage * 360f - 90f;
             float sunRotationY = config.sunDirection;
             directionalLight.transform.localRotation = Quaternion.Euler(sunRotationX, sunRotationY, 0f);
+        }
+
+        /// <summary>
+        /// Forwards an update tick to all configured visual modules so they can update their
+        /// visuals for the current time of day.
+        /// </summary>
+        /// <param name="timePercentage">Current time as a percentage (0-1), where 0 and 1 represent the same point in the cycle.</param>
+        /// <remarks>
+        /// This method is safe to call when there are no modules configured; it will simply return.
+        /// Each module's <see cref="DayNightVisualModule.UpdateVisual"/> method is invoked with the
+        /// provided time percentage.
+        /// </remarks>
+        protected virtual void ApplyUpdatesToModules(float timePercentage)
+        {
+            foreach (DayNightVisualModule dayNightVisualModule in visualModules)
+            {
+                dayNightVisualModule.UpdateVisual(timePercentage);
+            }
         }
 
         /// <summary>

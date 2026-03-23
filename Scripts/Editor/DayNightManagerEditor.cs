@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     [CustomEditor(typeof(DayNightManager))]
     public class DayNightManagerEditor : Editor

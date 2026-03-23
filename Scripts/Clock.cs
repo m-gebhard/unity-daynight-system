@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     /// <summary>
     /// Represents a clock that visually displays the current time based on the day-night cycle.

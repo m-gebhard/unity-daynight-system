@@ -1,6 +1,6 @@
 using System;
 
-namespace DayNightSystem
+namespace MGeLabs.DayNightSystem
 {
     /// <summary>
     /// Represents the data structure for the day-night cycle, including the current day and time.
