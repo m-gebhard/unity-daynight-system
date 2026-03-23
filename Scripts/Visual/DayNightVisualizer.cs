@@ -62,7 +62,7 @@ namespace MGeLabs.DayNightSystem
         }
 
         /// <summary>
-        /// Updates the lighting and skybox based on the current time of day.
+        /// Updates the lighting, skybox and modules based on the current time of day.
         /// </summary>
         /// <param name="timePercentage">Current time as a percentage (0-1).</param>
         public virtual void Update(float timePercentage)
@@ -164,7 +164,7 @@ namespace MGeLabs.DayNightSystem
         /// <param name="list">The list of floats to interpolate.</param>
         /// <param name="t">The interpolation parameter, typically between 0 and 1.</param>
         /// <returns>The interpolated float value.</returns>
-        protected static float Lerp(List<float> list, float t)
+        public static float Lerp(List<float> list, float t)
         {
             // Determine the indices of the start and end values
             int startIndex = (int)(t * (list.Count - 1));
